@@ -1,0 +1,23 @@
+# .autoreadme.yml
+includePatterns:
+  - "**/*.md"
+  - "**/*.txt"
+  - "**/*.xml"
+  - "**/*.java"
+  - "**/*.yaml"
+  - "**/*.yml"
+  - "**/*.cs"
+  
+excludePatterns:
+  - ".mvn/**"
+  - ".idea/**"
+  - "target/**"
+  - ".gitignore"
+  - ".gitattributes"
+  - ".github/**"
+  - "node_modules/**"
+
+routing:
+  threshold_chars: 1500      # Diffs under this size use the fast model
+  fast_provider: "gemini"    # Options: gemini, claude, openai
+  heavy_provider: "openai"   # Options: gemini, claude, openai

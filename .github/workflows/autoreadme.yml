@@ -1,0 +1,23 @@
+name: AI Auto-README
+on:
+  push:
+    branches: [ main ]
+    paths-ignore: ['README.md']
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Run script
+        run: python script/update_readme.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          API_KEY: ${{ secrets.LLM_API_KEY }}

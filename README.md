@@ -3,11 +3,10 @@
   <p><b>Keep your documentation perfectly in sync with your codebase, without the developer friction.</b></p>
 
   <p>
-    <a href="#"><img src="https://img.shields.io/badge/GitHub%20Actions-Active-blue.svg" alt="GitHub Actions Workflow Status"></a>
-    <a href="#"><img src="https://img.shields.io/badge/Python-3.x-blue.svg" alt="Python Version"></a>
-    <a href="#"><img src="https://img.shields.io/badge/Dependencies-0-brightgreen.svg" alt="Zero Dependencies"></a>
-    <a href="#"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-    <a href="#"><img src="https://img.shields.io/badge/Release-v1.0.0-blue" alt="Action Release"></a>
+    <a href="https://github.com/Michael-Steenkamp/repo-readme-generator/actions"><img src="https://img.shields.io/badge/GitHub%20Actions-Active-blue.svg" alt="GitHub Actions Workflow Status"></a>
+    <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.x-blue.svg" alt="Python Version"></a>
+    <a href="https://github.com/Michael-Steenkamp/repo-readme-generator/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+    <a href="https://github.com/Michael-Steenkamp/repo-readme-generator/releases/latest"><img src="https://img.shields.io/badge/Release-v1.0.0-blue" alt="Action Release"></a>
   </p>
 </div>
 
@@ -62,13 +61,48 @@
 
 <h2>🚀 Getting Started</h2>
 <p>
-  Integrate AutoReadme AI directly into your repository using the official GitHub Action release. This method runs entirely in the cloud, automatically opening PRs with documentation updates whenever you push code.
+  Integrate AutoReadme AI directly into your repository using the official GitHub Action. This runs entirely in the cloud, automatically opening PRs with documentation updates whenever you push code.
 </p>
 
-<h3>1. Add the Workflow</h3>
+<h3>1. Initialize the Repository</h3>
+<p>
+  Create your new repository on GitHub and clone it locally. You do not even need a <code>README.md</code> to start, as the engine will intelligently generate a fresh one!
+</p>
+
+<h3>2. Grant Pull Request Permissions</h3>
+<p>
+  Before adding any code, configure the repository settings so the Action is legally allowed to open PRs.
+</p>
+<ul>
+  <li>Go to your repository on GitHub.</li>
+  <li>Navigate to <b>Settings</b> > <b>Actions</b> > <b>General</b>.</li>
+  <li>Scroll down to the <b>Workflow permissions</b> section.</li>
+  <li>Check the box for <b>Allow GitHub Actions to create and approve pull requests</b>.</li>
+  <li>Click <b>Save</b>.</li>
+</ul>
+
+<h3>3. Add Your API Keys (Repository Secrets)</h3>
+<p>
+  You need to securely store your API keys so the GitHub runner can access them during execution. You only need to add keys for the specific models you plan to route to.
+</p>
+<p><b>Via the Web UI:</b></p>
+<ul>
+  <li>Go to <b>Settings</b> > <b>Security</b> > <b>Secrets and variables</b> > <b>Actions</b>.</li>
+  <li>Click the green <b>New repository secret</b> button.</li>
+  <li>Name it exactly <code>GEMINI_API_KEY</code> and paste your key.</li>
+  <li><i>(Optional)</i> Repeat for <code>OPENAI_API_KEY</code> or <code>ANTHROPIC_API_KEY</code> if you are setting up multi-model routing.</li>
+</ul>
+<p><b>Via the Terminal:</b></p>
+<p>If you prefer a keyboard-driven workflow, you can inject secrets directly using the GitHub CLI:</p>
+
+```bash
+gh secret set GEMINI_API_KEY --body "your_actual_api_key_here"
+```
+
+<h3>4. Add the Workflow</h3>
 <p>Create a new file in your repository at <code>.github/workflows/autoreadme.yml</code> and add the following configuration:</p>
 
-```yaml
+```yml
 name: AI Documentation Update
 on:
   push:
@@ -93,7 +127,19 @@ jobs:
         uses: Michael-Steenkamp/repo-readme-generator@v1.0.0 
         with: 
           gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
+          # Uncomment below if you set up heavy routing secrets
+          # openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          # anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
 ```
+
+<h3>5. Push and Trigger!</h3>
+<p>
+  Commit your new workflow file and push it to the <code>main</code> branch.
+</p>
+<p>
+  Because your workflow is set to trigger <code>on: push</code>, this initial push will instantly wake up the GitHub Action. It will pull your code, utilize your API key to generate a brand new README based on your project's tree, and automatically open a Pull Request for you to merge!
+</p>
+
 
 <!-- AI_STATE_START
 {

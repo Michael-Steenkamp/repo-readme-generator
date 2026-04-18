@@ -10,9 +10,14 @@ import urllib.error
 
 def extract_state(readme_text):
     pattern = r'<' + r'!-- AI_STATE_START(.*?)AI_STATE_END --' + r'>'
-    match = re.search(pattern, readme_text, re.DOTALL)
-    if match:
-        return json.loads(match.group(1))
+    matches = re.findall(pattern, readme_text, re.DOTALL)
+    # The actual AI state block should always be the last one in the file
+    raw_state = matches[-1].strip()
+    try:
+        return json.loads(raw_state)
+    except json.JSONDecodeError as e:
+        print(f"[AutoReadme] Warning: State block found but JSON is invalid: {e}")
+            
     return {"summary": "New project."}
 
 def get_git_diff(max_chars=10000):

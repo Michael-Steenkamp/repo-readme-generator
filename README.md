@@ -85,6 +85,14 @@
 <p>
   You need to securely store your API keys so the GitHub runner can access them during execution. You only need to add keys for the specific models you plan to route to.
 </p>
+
+<p><b>🔑 Get your API Keys here:</b></p>
+<ul>
+  <li><b>Gemini:</b> <a href="https://aistudio.google.com/app/apikey">Google AI Studio</a></li>
+  <li><b>OpenAI:</b> <a href="https://platform.openai.com/api-keys">OpenAI Platform</a></li>
+  <li><b>Anthropic:</b> <a href="https://console.anthropic.com/settings/keys">Anthropic Console</a></li>
+</ul>
+
 <p><b>Via the Web UI:</b></p>
 <ul>
   <li>Go to <b>Settings</b> > <b>Security</b> > <b>Secrets and variables</b> > <b>Actions</b>.</li>
@@ -92,6 +100,7 @@
   <li>Name it exactly <code>GEMINI_API_KEY</code> and paste your key.</li>
   <li><i>(Optional)</i> Repeat for <code>OPENAI_API_KEY</code> or <code>ANTHROPIC_API_KEY</code> if you are setting up multi-model routing.</li>
 </ul>
+
 <p><b>Via the Terminal:</b></p>
 <p>If you prefer a keyboard-driven workflow, you can inject secrets directly using the GitHub CLI:</p>
 

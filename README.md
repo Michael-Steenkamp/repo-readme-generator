@@ -96,6 +96,6 @@ jobs:
 
 <!-- AI_STATE_START
 {
-  "summary": "AutoReadme AI core architecture is fully implemented and documented. The system supports three phases: Environment Extraction, AI Pipeline generation with tiered LLM routing (Gemini/OpenAI), and Version Control Reconciliation. It features regex-based output sanitization, zero-dependency Python execution, and dual-environment support. Setup instructions for both Cloud (GitHub Actions) and Local (git autopush alias) workflows are integrated. Release for streamline integration."
+  "summary": "AutoReadme AI's core architecture is fully implemented, encompassing environment extraction, tiered LLM routing for documentation generation, and version control reconciliation. The `extract_state` function in `script/update_readme.py` has been enhanced to robustly parse the hidden AI state from the README, ensuring the latest state block is correctly identified and handled, and providing error detection for malformed JSON. The system continues to feature regex-based output sanitization, zero-dependency Python execution, and comprehensive setup for both Cloud (GitHub Actions) and Local `git autopush` workflows."
 }
 AI_STATE_END -->

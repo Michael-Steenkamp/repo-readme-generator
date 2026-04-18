@@ -93,6 +93,7 @@ jobs:
         uses: Michael-Steenkamp/repo-readme-generator@v1.0.0 
         with: 
           gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
+```
 
 <!-- AI_STATE_START
 {

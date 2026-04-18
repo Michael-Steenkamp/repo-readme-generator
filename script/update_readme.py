@@ -11,6 +11,12 @@ import urllib.error
 def extract_state(readme_text):
     pattern = r'<' + r'!-- AI_STATE_START(.*?)AI_STATE_END --' + r'>'
     matches = re.findall(pattern, readme_text, re.DOTALL)
+    
+    # Check if the regex found any matches before accessing the list
+    if not matches:
+        print("[AutoReadme] No AI state block found. Initializing fresh state.")
+        return {"summary": "New project."}
+        
     # The actual AI state block should always be the last one in the file
     raw_state = matches[-1].strip()
     try:

@@ -208,7 +208,20 @@ def get_project_tree():
         
     except subprocess.CalledProcessError:
         return "Error: Could not extract project tree."
-
+    
+def clean_llm_output(raw_text):
+    """
+    Strips rogue markdown wrappers and trailing whitespace from the LLM response.
+    Specifically removes ```markdown from the start and ``` from the end.
+    """
+    # Matches three backticks, optional letters (like 'markdown'), and a newline at the start
+    clean_text = re.sub(r'^```[a-zA-Z]*\s*\n', '', raw_text, flags=re.IGNORECASE)
+    
+    # Matches a newline, optional whitespace, and three backticks at the very end
+    clean_text = re.sub(r'\n\s*```\s*$', '', clean_text)
+    
+    return clean_text.strip() + '\n'
+    
 if __name__ == "__main__":
     import sys
     print("[AutoReadme] Initializing local pre-push generation...")
@@ -230,35 +243,47 @@ if __name__ == "__main__":
         sys.exit(0)
 
     # Compile Prompt
-    prompt = f"""
-    You are a technical documentation AI. 
-    Review the following repository state and generate an updated README.md in raw Markdown.
-    
-    CURRENT AI STATE SUMMARY:
+    USER_PROMPT = f"""
+    Rebuild the following README.md based strictly on the provided Git Diff and Project Tree. 
+
+    --- CONTEXT INJECTIONS ---
+
+    1. CURRENT AI STATE:
     {json.dumps(state)}
-    
-    PROJECT ARCHITECTURE:
+
+    2. PROJECT TREE:
     {project_tree}
-    
-    LATEST GIT DIFF:
+
+    3. LATEST GIT DIFF:
     {diff_text}
-    
-    CURRENT README CONTENT:
+
+    4. CURRENT README:
     {current_readme}
-    
-    INSTRUCTIONS:
-    1. Update the README content strictly based on the git diff. Do not invent features.
-    2. Maintain a highly minimalist and developer-first tone.
-    3. You MUST include a new rolling summary at the very bottom of your response, wrapped exactly like this:
-       """
+
+    --- EXECUTION RULES ---
+    1. Synthesize the Git Diff into the README. Do not invent features or document files that do not exist in the Project Tree.
+    2. Maintain a minimalist, developer-first tone.
+    3. Update the rolling summary to reflect these new changes.
+    4. You MUST append this new rolling summary at the absolute bottom of your response, strictly formatted as hidden HTML.
+
+    Format the state block EXACTLY like this at the end of the file:
+    <!-- AI_STATE_START
+    {{
+      "summary": "Concise summary of the current project state and the latest updates."
+    }}
+    AI_STATE_END -->
+    """
 
     # Dispatch Request
     print("[AutoReadme] Compiling prompt and routing to LLM...")
-    new_readme_content = route_llm_payload(prompt, diff_text, config)
+    raw_response = route_llm_payload(USER_PROMPT, diff_text, config)
     
-    if new_readme_content.startswith("API Connection Error") or "Error:" in new_readme_content:
-        print(f"[AutoReadme] Generation failed: {new_readme_content}")
+    if raw_response.startswith("API Connection Error") or "Error:" in raw_response:
+        print(f"[AutoReadme] Generation failed: {raw_response}")
         sys.exit(1)
+
+    # Sanitize the output to remove rogue backticks
+    new_readme_content = clean_llm_output(raw_response)
 
     # Output to File
     with open("README.md", "w", encoding="utf-8") as f:

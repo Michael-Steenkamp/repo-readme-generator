@@ -124,7 +124,7 @@ jobs:
           fetch-depth: 2 
           
       - name: Run AutoReadme AI
-        uses: Michael-Steenkamp/repo-readme-generator@v1.0.0 
+        uses: Michael-Steenkamp/repo-readme-generator@v1
         with: 
           gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
           # Uncomment below if you set up heavy routing secrets

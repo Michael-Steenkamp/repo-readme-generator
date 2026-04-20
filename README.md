@@ -3,12 +3,12 @@
   <p><b>Keep your documentation perfectly in sync with your codebase.</b></p>
 </div>
 
-<div align="center">
-  
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-  [![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
-  [![Build Status](https://github.com/Michael-Steenkamp/repo-readme-generator/actions/workflows/autoreadme.yml/badge.svg)](https://github.com/Michael-Steenkamp/repo-readme-generator/actions/workflows/autoreadme.yml)
-</div>
+  <p align="center">
+    <a href="https://github.com/Michael-Steenkamp/repo-readme-generator/actions"><img src="https://img.shields.io/badge/GitHub%20Actions-Active-blue.svg" alt="GitHub Actions Workflow Status"></a>
+    <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.x-blue.svg" alt="Python Version"></a>
+    <a href="https://github.com/Michael-Steenkamp/repo-readme-generator/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+    <a href="https://github.com/Michael-Steenkamp/repo-readme-generator/releases/latest"><img src="https://img.shields.io/badge/Release-v1.0.0-blue" alt="Action Release"></a>
+  </p>
 
 ---
 

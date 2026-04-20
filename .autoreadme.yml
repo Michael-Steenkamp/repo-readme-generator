@@ -23,5 +23,5 @@ routing:
   heavy_provider: "openai"   # Options: gemini, claude, openai
 
 style:
-  theme: "executive"   # Options: developer-first, minimalist, executive, creative
-  include_badges: false       # Set to false to prevent the AI from generating markdown badges
+  theme: "minimalist"   # Options: developer-first, minimalist, executive, creative
+  include_badges: true       # Set to false to prevent the AI from generating markdown badges

@@ -9,6 +9,7 @@ import urllib.request
 import urllib.error
 import argparse
 import sys
+import time
 
 def extract_state(readme_text):
     pattern = r'<' + r'!-- AI_STATE_START(.*?)AI_STATE_END --' + r'>'
@@ -109,73 +110,88 @@ def route_llm_payload(prompt, diff_text, config):
 def dispatch_request(prompt, provider):
     """Compiles provider-specific payloads and executes the HTTP request."""
     system_instruction = "You are an AI that exclusively outputs raw Markdown. Do not include conversational filler."
+    max_retries = 3
     
-    try:
-        if provider == "openai":
-            api_key = os.environ.get("OPENAI_API_KEY")
-            url = "https://api.openai.com/v1/chat/completions"
-            data = {
-                "model": "gpt-4o",
-                "messages": [
-                    {"role": "system", "content": system_instruction},
-                    {"role": "user", "content": prompt}
-                ]
-            }
-            headers = {
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {api_key}"
-            }
-            
-        elif provider == "gemini":
-            api_key = os.environ.get("GEMINI_API_KEY")
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
-            data = {
-                "systemInstruction": { "parts": [{"text": system_instruction}]},
-                "contents": [{"parts": [{"text": prompt}]}]
-            }
-            headers = {"Content-Type": "application/json"}
-            
-        elif provider == "anthropic":
-            api_key = os.environ.get("ANTHROPIC_API_KEY")
-            url = "https://api.anthropic.com/v1/messages"
-            data = {
-                "model": "claude-3-haiku-20240307",
-                "max_tokens": 2000,
-                "system": system_instruction,
-                "messages": [{"role": "user", "content": prompt}]
-            }
-            headers = {
-                "Content-Type": "application/json",
-                "x-api-key": api_key,
-                "anthropic-version": "2023-06-01"
-            }
-        else:
-            return f"Error: Unsupported provider '{provider}'"
-
-        json_data = json.dumps(data).encode('utf-8')
-        req = urllib.request.Request(url, data=json_data, headers=headers, method='POST')
-        
-        if not api_key:
-             return f"[Local Test] Route successful. Payload configured for {provider.upper()}, but no API key found in environment."
-
-        with urllib.request.urlopen(req) as response:
-            result = json.loads(response.read().decode('utf-8'))
-            
+    for attempt in range(max_retries):
+        try:
             if provider == "openai":
-                return result['choices'][0]['message']['content']
+                api_key = os.environ.get("OPENAI_API_KEY")
+                url = "https://api.openai.com/v1/chat/completions"
+                data = {
+                    "model": "gpt-4o",
+                    "messages": [
+                        {"role": "system", "content": system_instruction},
+                        {"role": "user", "content": prompt}
+                    ]
+                }
+                headers = {
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {api_key}"
+                }
+                
             elif provider == "gemini":
-                return result['candidates'][0]['content']['parts'][0]['text']
+                api_key = os.environ.get("GEMINI_API_KEY")
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
+                data = {
+                    "systemInstruction": { "parts": [{"text": system_instruction}]},
+                    "contents": [{"parts": [{"text": prompt}]}]
+                }
+                headers = {"Content-Type": "application/json"}
+                
             elif provider == "anthropic":
-                return result['content'][0]['text']
+                api_key = os.environ.get("ANTHROPIC_API_KEY")
+                url = "https://api.anthropic.com/v1/messages"
+                data = {
+                    "model": "claude-3-haiku-20240307",
+                    "max_tokens": 2000,
+                    "system": system_instruction,
+                    "messages": [{"role": "user", "content": prompt}]
+                }
+                headers = {
+                    "Content-Type": "application/json",
+                    "x-api-key": api_key,
+                    "anthropic-version": "2023-06-01"
+                }
+            else:
+                return f"Error: Unsupported provider '{provider}'"
 
-    except urllib.error.HTTPError as e:
-        # Fallback to fast model on HTTP failure
-        if provider != "gemini":
-            print(f"[Router Warning] {provider.upper()} failed with {e.code}. Initiating failover to Fast Model...")
-            return dispatch_request(prompt, "gemini")
-        return f"API Connection Error: {e.code} - {e.reason}"
-    except urllib.error.URLError as e:
-        return f"API Connection Error: {e}"
+            json_data = json.dumps(data).encode('utf-8')
+            req = urllib.request.Request(url, data=json_data, headers=headers, method='POST')
+            
+            if not api_key:
+                 return f"[Local Test] Route successful. Payload configured for {provider.upper()}, but no API key found in environment."
+
+            with urllib.request.urlopen(req) as response:
+                result = json.loads(response.read().decode('utf-8'))
+                
+                if provider == "openai":
+                    return result['choices'][0]['message']['content']
+                elif provider == "gemini":
+                    return result['candidates'][0]['content']['parts'][0]['text']
+                elif provider == "anthropic":
+                    return result['content'][0]['text']
+
+        except urllib.error.HTTPError as e:
+            # Handle temporary network/server overloads with retries
+            if e.code in [429, 500, 502, 503, 504] and attempt < max_retries - 1:
+                sleep_time = 2 ** attempt
+                print(f"[AutoReadme] ⚠️ API {e.code} Error. Retrying in {sleep_time} seconds (Attempt {attempt + 1}/{max_retries})...")
+                time.sleep(sleep_time)
+                continue
+                
+            # Fallback to fast model on HTTP failure if we exhaust retries (or hit a non-retryable error)
+            if provider != "gemini":
+                print(f"[Router Warning] {provider.upper()} failed with {e.code}. Initiating failover to Fast Model...")
+                return dispatch_request(prompt, "gemini")
+            return f"API Connection Error: {e.code} - {e.reason}"
+            
+        except urllib.error.URLError as e:
+            if attempt < max_retries - 1:
+                sleep_time = 2 ** attempt
+                print(f"[AutoReadme] ⚠️ URL Error ({e.reason}). Retrying in {sleep_time} seconds (Attempt {attempt + 1}/{max_retries})...")
+                time.sleep(sleep_time)
+                continue
+            return f"API Connection Error: {e}"
 
 def match_pattern(file_path, pattern):
     """Translates glob patterns (like **/*.md or .mvn/**) for Python's fnmatch"""
@@ -346,6 +362,3 @@ if __name__ == "__main__":
         f.write(new_readme_content)
         
     print("[AutoReadme] README.md successfully updated!")
-
-
-    #TEST

@@ -109,6 +109,7 @@ export GEMINI_API_KEY="your_actual_api_key_here"
 Create `.github/workflows/autoreadme.yml` with this configuration:
 
 ```yml
+# .autoreadme.yml
 name: AI Documentation Update
 on:
   push:
@@ -136,6 +137,33 @@ jobs:
           # Uncomment below if you set up heavy routing secrets
           # openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           # anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+
+includePatterns:
+  - "**/*.md"
+  - "**/*.txt"
+  - "**/*.xml"
+  - "**/*.java"
+  - "**/*.yaml"
+  - "**/*.yml"
+  - "**/*.cs"
+  
+excludePatterns:
+  - ".mvn/**"
+  - ".idea/**"
+  - "target/**"
+  - ".gitignore"
+  - ".gitattributes"
+  - ".github/**"
+  - "node_modules/**"
+
+routing:
+  threshold_chars: 1500      # Diffs under this size use the fast model
+  fast_provider: "gemini"    # Options: gemini, claude, openai
+  heavy_provider: "openai"   # Options: gemini, claude, openai
+
+style:
+  theme: "developer-first"   # Options: developer-first, minimalist, executive, creative
+  include_badges: true       # Set to false to prevent the AI from generating markdown badges
 ```
 
 <h3>5. Push and Trigger GitHub Actions!</h3>

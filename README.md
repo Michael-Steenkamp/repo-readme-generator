@@ -1,13 +1,6 @@
 <div align="center">
   <h1>🤖 AutoReadme AI</h1>
   <p><b>Keep your documentation perfectly in sync with your codebase, without the developer friction.</b></p>
-
-  <p>
-    <a href="https://github.com/Michael-Steenkamp/repo-readme-generator/actions"><img src="https://img.shields.io/badge/GitHub%20Actions-Active-blue.svg" alt="GitHub Actions Workflow Status"></a>
-    <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.x-blue.svg" alt="Python Version"></a>
-    <a href="https://github.com/Michael-Steenkamp/repo-readme-generator/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-    <a href="https://github.com/Michael-Steenkamp/repo-readme-generator/releases/latest"><img src="https://img.shields.io/badge/Release-v1.0.0-blue" alt="Action Release"></a>
-  </p>
 </div>
 
 <hr>
@@ -56,6 +49,13 @@
   <li>🔀 <b>Tiered LLM Routing:</b> Dynamically selects the most efficient AI provider based on the character length of the git diff.</li>
   <li>⚡ <b>Zero-Dependency Core:</b> Built entirely using standard Python libraries to ensure lightning-fast execution and zero environment bloating.</li>
 </ul>
+
+<hr>
+
+<h2>⚖️ Legal & Licensing</h2>
+<p>
+  This project is distributed under the MIT License. A copy of the license terms can be found in the <a href="LICENSE">LICENSE</a> file at the root of the repository.
+</p>
 
 <hr>
 
@@ -148,7 +148,6 @@ jobs:
 <p>
   Because your workflow is set to trigger <code>on: push</code>, this initial push will instantly wake up the GitHub Action. It will pull your code, utilize your API key to generate a brand new README based on your project's tree, and automatically open a Pull Request for you to merge!
 </p>
-
 
 <!-- AI_STATE_START
 {

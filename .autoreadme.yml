@@ -21,3 +21,7 @@ routing:
   threshold_chars: 1500      # Diffs under this size use the fast model
   fast_provider: "gemini"    # Options: gemini, claude, openai
   heavy_provider: "openai"   # Options: gemini, claude, openai
+
+style:
+  theme: "executive"   # Options: developer-first, minimalist, executive, creative
+  include_badges: false       # Set to false to prevent the AI from generating markdown badges

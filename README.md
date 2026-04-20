@@ -1,90 +1,80 @@
 <div align="center">
   <h1>🤖 AutoReadme AI</h1>
-  <p><b>Keep your documentation perfectly in sync with your codebase, without the developer friction.</b></p>
+  <p><b>Keep your documentation perfectly in sync with your codebase.</b></p>
+</div>
 
-  <p>
+  <p align="center">
     <a href="https://github.com/Michael-Steenkamp/repo-readme-generator/actions"><img src="https://img.shields.io/badge/GitHub%20Actions-Active-blue.svg" alt="GitHub Actions Workflow Status"></a>
     <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.x-blue.svg" alt="Python Version"></a>
     <a href="https://github.com/Michael-Steenkamp/repo-readme-generator/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
     <a href="https://github.com/Michael-Steenkamp/repo-readme-generator/releases/latest"><img src="https://img.shields.io/badge/Release-v1.0.0-blue" alt="Action Release"></a>
   </p>
-</div>
 
-<hr>
+---
 
-<h2>📖 Overview</h2>
-<p>
-  <b>AutoReadme AI</b> is a server-less Git automation pipeline and developer tool designed to eliminate the chore of manual documentation updates. It dynamically fetches your project's state, requests intelligent documentation updates from Large Language Models (LLMs), and seamlessly utilizes the GitHub API to submit code changes via Pull Requests.
-</p>
-<p>
-  Stop writing READMEs. Start shipping code.
-</p>
+## 📖 Overview
+<b>AutoReadme AI</b> is a robust, serverless Git automation pipeline designed to keep your project documentation perpetually updated. It intelligently extracts project state, routes update requests to large language models (LLMs), and seamlessly integrates changes via Pull Requests.
 
-<hr>
+Stop writing READMEs. Start shipping code.
 
-<h2>🏗️ Architecture & Phases of Development</h2>
-<p>The AutoReadme AI pipeline executes in three distinct, highly optimized phases:</p>
+---
 
-<h3>Phase A: Environment & Extraction</h3>
-<ul>
-  <li><b>Diff Extraction:</b> Extracts the latest Git diff (<code>HEAD~1 HEAD</code>) using standard Python libraries.</li>
-  <li><b>Tree Generation:</b> Generates a token-efficient directory tree of your project.</li>
-  <li><b>Custom Rules:</b> Applies custom exclusion rules via a <code>.autoreadme.yml</code> configuration file to ignore irrelevant files.</li>
-  <li><b>State Parsing:</b> Parses the current <code>README.md</code> to extract hidden AI state memory for continuous context.</li>
-</ul>
+## 🏗️ Architecture & Phases
 
-<h3>Phase B: The AI Pipeline</h3>
-<ul>
-  <li><b>Payload Compilation:</b> Compiles a strict, context-rich prompt payload.</li>
-  <li><b>Tiered LLM Routing:</b> Intelligently routes the request based on payload size—sending small diffs to fast models (like Gemini 2.5 Flash) and massive architectural shifts to heavy models (like GPT-4o).</li>
-  <li><b>State Injection:</b> Injects the rolling-state memory so the AI remembers past decisions.</li>
-  <li><b>Execution & Sanitization:</b> Enforces a strict raw-markdown output instruction and actively sanitizes the response using Regex to strip rogue formatting, backticks, or hallucinations.</li>
-</ul>
+The AutoReadme AI pipeline operates in three core phases:
 
-<h3>Phase C: Version Control Reconciliation</h3>
-<ul>
-  <li><b>Cloud Execution:</b> Utilizes GitHub Actions to run the pipeline on push, automatically opening a new PR with updated documentation.</li>
-</ul>
+### Phase A: Environment & Extraction
+*   **Diff Extraction:** Gathers the latest Git diff (`HEAD~1 HEAD`) for analysis.
+*   **Tree Generation:** Constructs a token-efficient, LLM-friendly directory tree.
+*   **Custom Rules:** Applies exclusion and inclusion rules defined in `.autoreadme.yml`.
+*   **State Parsing:** Robustly extracts hidden AI state from `README.md` to maintain continuous context across runs.
 
-<hr>
+### Phase B: The AI Pipeline
+*   **Payload Compilation:** Assembles a comprehensive, context-rich prompt for the LLM.
+*   **Tiered LLM Routing:** Intelligently routes requests to the most efficient AI provider based on payload size (e.g., small diffs to fast models, large changes to heavy models).
+*   **State Injection:** Injects rolling-state memory to ensure context persistence.
+*   **Execution & Sanitization:** Enforces raw-markdown output and rigorously sanitizes responses using Regex to ensure clean, valid documentation.
+
+### Phase C: Version Control Reconciliation
+*   **Cloud & Local Execution:** Designed to run seamlessly within GitHub Actions or as a local CLI tool, automating PRs with updated documentation or direct file modifications.
+
+---
 
 <h2>✨ Key Features</h2>
 <ul>
-  <li>📦 <b>Plug-and-Play Action:</b> Easily integrate into any repository via a single <code>uses</code> step. No need to clone scripts or manage dependencies.</li>
-  <li>🧠 <b>Rolling-State Memory:</b> Maintains context across pushes without an external database by using hidden HTML comments embedded directly in the README.</li>
-  <li>📏 <b>Smart Git Diffing:</b> Automatically falls back to a <code>--stat</code> summary if code changes are massive, protecting your API costs and preventing token limit breaches.</li>
-  <li>🔀 <b>Tiered LLM Routing:</b> Dynamically selects the most efficient AI provider based on the character length of the git diff.</li>
-  <li>⚡ <b>Zero-Dependency Core:</b> Built entirely using standard Python libraries to ensure lightning-fast execution and zero environment bloating.</li>
+  <li>📦 <b>Plug-and-Play Integration:</b> Seamlessly integrate via a single GitHub Action `uses` step or run as a local CLI tool.</li>
+  <li>🧠 <b>Rolling-State Memory:</b> Maintains context across pushes by robustly extracting hidden HTML comments from the README, ensuring continuous, intelligent updates.</li>
+  <li>📏 <b>Smart Git Diffing:</b> Optimizes API costs and performance by intelligently processing diffs, falling back to a `--stat` summary for massive changes.</li>
+  <li>🔀 <b>Tiered LLM Routing:</b> Dynamically selects the most efficient AI provider (e.g., Gemini, OpenAI, Anthropic) based on diff length and task complexity.</li>
+  <li>⚡ <b>Zero-Dependency Core:</b> Built with standard Python libraries for lightweight, fast, and reliable execution.</li>
+  <li>🛡️ <b>Output Sanitization:</b> Guarantees clean, valid markdown output by enforcing strict formatting and sanitizing LLM responses using Regex.</li>
 </ul>
 
-<hr>
+---
+
+<h2>⚖️ Legal & Licensing</h2>
+This project is distributed under the MIT License. A copy can be found in the <a href="LICENSE">LICENSE</a> file.
+
+---
 
 <h2>🚀 Getting Started</h2>
-<p>
-  Integrate AutoReadme AI directly into your repository using the official GitHub Action. This runs entirely in the cloud, automatically opening PRs with documentation updates whenever you push code.
-</p>
+Integrate AutoReadme AI directly into your repository using the official GitHub Action for cloud-based automation, or run it as a local command-line tool for immediate updates. It automatically opens PRs with documentation updates on code pushes (via GitHub Actions) or modifies files directly (via local execution).
 
 <h3>1. Initialize the Repository</h3>
-<p>
-  Create your new repository on GitHub and clone it locally. You do not even need a <code>README.md</code> to start, as the engine will intelligently generate a fresh one!
-</p>
+Create your GitHub repository and clone it. The engine can generate a fresh `README.md` if none exists.
 
-<h3>2. Grant Pull Request Permissions</h3>
-<p>
-  Before adding any code, configure the repository settings so the Action is legally allowed to open PRs.
-</p>
+<h3>2. Grant Pull Request Permissions (for GitHub Actions)</h3>
+Configure repository settings to allow the Action to open PRs.
 <ul>
   <li>Go to your repository on GitHub.</li>
   <li>Navigate to <b>Settings</b> > <b>Actions</b> > <b>General</b>.</li>
-  <li>Scroll down to the <b>Workflow permissions</b> section.</li>
-  <li>Check the box for <b>Allow GitHub Actions to create and approve pull requests</b>.</li>
+  <li>Scroll to <b>Workflow permissions</b>.</li>
+  <li>Check <b>Allow GitHub Actions to create and approve pull requests</b>.</li>
   <li>Click <b>Save</b>.</li>
 </ul>
 
-<h3>3. Add Your API Keys (Repository Secrets)</h3>
-<p>
-  You need to securely store your API keys so the GitHub runner can access them during execution. You only need to add keys for the specific models you plan to route to.
-</p>
+<h3>3. Add Your API Keys (Repository Secrets or Environment Variables)</h3>
+Store your API keys securely for the GitHub runner (as repository secrets) or set them as environment variables for local execution. Only add keys for models you plan to use.
 
 <p><b>🔑 Get your API Keys here:</b></p>
 <ul>
@@ -93,25 +83,33 @@
   <li><b>Anthropic:</b> <a href="https://console.anthropic.com/settings/keys">Anthropic Console</a></li>
 </ul>
 
-<p><b>Via the Web UI:</b></p>
+<p><b>Via GitHub Repository Secrets (for GitHub Actions):</b></p>
 <ul>
   <li>Go to <b>Settings</b> > <b>Security</b> > <b>Secrets and variables</b> > <b>Actions</b>.</li>
-  <li>Click the green <b>New repository secret</b> button.</li>
+  <li>Click <b>New repository secret</b>.</li>
   <li>Name it exactly <code>GEMINI_API_KEY</code> and paste your key.</li>
-  <li><i>(Optional)</i> Repeat for <code>OPENAI_API_KEY</code> or <code>ANTHROPIC_API_KEY</code> if you are setting up multi-model routing.</li>
+  <li><i>(Optional)</i> Repeat for <code>OPENAI_API_KEY</code> or <code>ANTHROPIC_API_KEY</code>.</li>
 </ul>
 
-<p><b>Via the Terminal:</b></p>
-<p>If you prefer a keyboard-driven workflow, you can inject secrets directly using the GitHub CLI:</p>
+<p><b>Via GitHub CLI:</b></p>
+Use the GitHub CLI to inject secrets:
 
 ```bash
 gh secret set GEMINI_API_KEY --body "your_actual_api_key_here"
 ```
 
-<h3>4. Add the Workflow</h3>
-<p>Create a new file in your repository at <code>.github/workflows/autoreadme.yml</code> and add the following configuration:</p>
+<p><b>Via Local Environment Variables (for local execution):</b></p>
+```bash
+export GEMINI_API_KEY="your_actual_api_key_here"
+# export OPENAI_API_KEY="your_actual_api_key_here"
+# export ANTHROPIC_API_KEY="your_actual_api_key_here"
+```
+
+<h3>4. Add the GitHub Actions Workflow</h3>
+Create `.github/workflows/autoreadme.yml` with this configuration:
 
 ```yml
+# .autoreadme.yml
 name: AI Documentation Update
 on:
   push:
@@ -126,32 +124,68 @@ permissions:
 jobs:
   update-docs:
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - name: Checkout Code
-        uses: actions/checkout@v4 
-        with: 
-          fetch-depth: 2 
-          
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
       - name: Run AutoReadme AI
         uses: Michael-Steenkamp/repo-readme-generator@v1
-        with: 
+        with:
           gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
           # Uncomment below if you set up heavy routing secrets
           # openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           # anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+
+includePatterns:
+  - "**/*.md"
+  - "**/*.txt"
+  - "**/*.xml"
+  - "**/*.java"
+  - "**/*.yaml"
+  - "**/*.yml"
+  - "**/*.cs"
+  
+excludePatterns:
+  - ".mvn/**"
+  - ".idea/**"
+  - "target/**"
+  - ".gitignore"
+  - ".gitattributes"
+  - ".github/**"
+  - "node_modules/**"
+
+routing:
+  threshold_chars: 1500      # Diffs under this size use the fast model
+  fast_provider: "gemini"    # Options: gemini, claude, openai
+  heavy_provider: "openai"   # Options: gemini, claude, openai
+
+style:
+  theme: "developer-first"   # Options: developer-first, minimalist, executive, creative
+  include_badges: true       # Set to false to prevent the AI from generating markdown badges
 ```
 
-<h3>5. Push and Trigger!</h3>
-<p>
-  Commit your new workflow file and push it to the <code>main</code> branch.
-</p>
-<p>
-  Because your workflow is set to trigger <code>on: push</code>, this initial push will instantly wake up the GitHub Action. It will pull your code, utilize your API key to generate a brand new README based on your project's tree, and automatically open a Pull Request for you to merge!
-</p>
+<h3>5. Push and Trigger GitHub Actions!</h3>
+Commit your new workflow file and push it to the `main` branch. This push will trigger the GitHub Action, which will generate a README based on your project and open a Pull Request.
 
+<h3>6. Run Locally (Optional)</h3>
+For immediate feedback or local development, you can run AutoReadme AI directly via Python.
+
+First, ensure you have Python 3.x installed and your API keys are set as environment variables (see Step 3).
+
+```bash
+# Clone the AutoReadme AI repository to run its script locally
+git clone https://github.com/Michael-Steenkamp/repo-readme-generator.git
+cd repo-readme-generator
+
+# Run the update script from the project root (where your README.md is)
+python script/update_readme.py
+```
+This command will update your `README.md` in place, incorporating the latest changes based on your project's state.
 
 <!-- AI_STATE_START
 {
-  "summary": "AutoReadme AI's core architecture is fully implemented, encompassing environment extraction, tiered LLM routing for documentation generation, and version control reconciliation. The `extract_state` function in `script/update_readme.py` has been enhanced to robustly parse the hidden AI state from the README, ensuring the latest state block is correctly identified and handled, and providing error detection for malformed JSON. The system continues to feature regex-based output sanitization, zero-dependency Python execution, and comprehensive setup for both Cloud (GitHub Actions) and Local `git autopush` workflows."
+  "summary": "AutoReadme AI's architecture is fully implemented, offering robust environment extraction, tiered LLM routing, and seamless version control reconciliation. Key enhancements include strengthened AI state extraction, comprehensive output sanitization, and the integration of a zero-dependency core that supports both GitHub Actions and local CLI execution. The system also features an updated styling configuration for minimalist themes and markdown badges, ensuring a clean and informative project overview."
 }
 AI_STATE_END -->

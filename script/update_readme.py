@@ -346,3 +346,6 @@ if __name__ == "__main__":
         f.write(new_readme_content)
         
     print("[AutoReadme] README.md successfully updated!")
+
+
+    #TEST

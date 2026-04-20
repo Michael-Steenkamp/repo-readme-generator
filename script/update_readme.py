@@ -110,7 +110,8 @@ def route_llm_payload(prompt, diff_text, config):
 def dispatch_request(prompt, provider):
     """Compiles provider-specific payloads and executes the HTTP request."""
     system_instruction = "You are an AI that exclusively outputs raw Markdown. Do not include conversational filler."
-    max_retries = 3
+    max_retries = 6 # 1 initial attempt + 5 retries
+    delays = [1, 2, 4, 8, 16]
     
     for attempt in range(max_retries):
         try:
@@ -172,26 +173,24 @@ def dispatch_request(prompt, provider):
                     return result['content'][0]['text']
 
         except urllib.error.HTTPError as e:
-            # Handle temporary network/server overloads with retries
-            if e.code in [429, 500, 502, 503, 504] and attempt < max_retries - 1:
-                sleep_time = 2 ** attempt
-                print(f"[AutoReadme] ⚠️ API {e.code} Error. Retrying in {sleep_time} seconds (Attempt {attempt + 1}/{max_retries})...")
-                time.sleep(sleep_time)
+            # Handle temporary network/server overloads with retries (quietly in the background)
+            if e.code in [429, 500, 502, 503, 504] and attempt < len(delays):
+                time.sleep(delays[attempt])
                 continue
                 
             # Fallback to fast model on HTTP failure if we exhaust retries (or hit a non-retryable error)
             if provider != "gemini":
                 print(f"[Router Warning] {provider.upper()} failed with {e.code}. Initiating failover to Fast Model...")
                 return dispatch_request(prompt, "gemini")
-            return f"API Connection Error: {e.code} - {e.reason}"
+            return f"API Connection Error: {e.code} - {e.reason}. Please try again later."
             
         except urllib.error.URLError as e:
-            if attempt < max_retries - 1:
-                sleep_time = 2 ** attempt
-                print(f"[AutoReadme] ⚠️ URL Error ({e.reason}). Retrying in {sleep_time} seconds (Attempt {attempt + 1}/{max_retries})...")
-                time.sleep(sleep_time)
+            if attempt < len(delays):
+                time.sleep(delays[attempt])
                 continue
             return f"API Connection Error: {e}"
+            
+    return "API Connection Error: Maximum retries exceeded."
 
 def match_pattern(file_path, pattern):
     """Translates glob patterns (like **/*.md or .mvn/**) for Python's fnmatch"""
@@ -301,11 +300,15 @@ if __name__ == "__main__":
     theme = style_config.get("theme", "developer-first")
     include_badges = style_config.get("include_badges", True)
     
-    badge_instruction = "Include relevant standard Markdown badges (e.g., using shields.io for language, build status, license) at the very top." if include_badges else "Do NOT include any Markdown badges. Keep the visual style purely text-based."
+    # --- ENHANCED: Give the AI strict HTML styling rules for badges ---
+    badge_instruction = (
+        "Include relevant standard Markdown badges (e.g., using shields.io for language, build status, license). "
+        "Integrate them stylistically at the very top of the document (e.g., grouped neatly and centered using HTML `<p align=\"center\">` tags directly under the main title) rather than randomly placing them."
+    ) if include_badges else "Do NOT include any Markdown badges. Keep the visual style purely text-based."
 
-    # Compile Prompt
+    # --- ENHANCED: Change "Rebuild" to "Update" and add the Surgical Update rule ---
     USER_PROMPT = f"""
-    Rebuild the following README.md based strictly on the provided Git Diff and Project Tree. 
+    You are an expert technical writer. Your task is to strategically UPDATE the existing README.md based on the provided Git Diff and Project Tree.
 
     --- CONTEXT INJECTIONS ---
 
@@ -326,11 +329,12 @@ if __name__ == "__main__":
     Badges: {badge_instruction}
 
     --- EXECUTION RULES ---
-    1. Synthesize the Git Diff into the README. Do not invent features or document files that do not exist in the Project Tree.
-    2. Maintain a {theme} tone and structure the document accordingly.
-    3. {badge_instruction}
-    4. Update the rolling summary to reflect these new changes.
-    5. You MUST append this new rolling summary at the absolute bottom of your response, strictly formatted as hidden HTML.
+    1. SURGICAL UPDATE: Do NOT rewrite the entire README from scratch. Preserve the existing layout, HTML structure, headings, and unique styling of the CURRENT README. Only add or modify the specific sections relevant to the LATEST GIT DIFF.
+    2. Synthesize the Git Diff into the README seamlessly. Do not invent features or document files that do not exist in the Project Tree.
+    3. Maintain a {theme} tone.
+    4. {badge_instruction}
+    5. Update the rolling summary to reflect these new changes.
+    6. You MUST append this new rolling summary at the absolute bottom of your response, strictly formatted as hidden HTML.
 
     Format the state block EXACTLY like this at the end of the file:
     <!-- AI_STATE_START

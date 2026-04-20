@@ -3,11 +3,12 @@
   <p><b>Keep your documentation perfectly in sync with your codebase.</b></p>
 </div>
 
-<p align="center">
+<div align="center">
+  
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
   [![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
   [![Build Status](https://github.com/Michael-Steenkamp/repo-readme-generator/actions/workflows/autoreadme.yml/badge.svg)](https://github.com/Michael-Steenkamp/repo-readme-generator/actions/workflows/autoreadme.yml)
-</p>
+</div>
 
 ---
 

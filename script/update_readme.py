@@ -303,7 +303,7 @@ if __name__ == "__main__":
     # --- ENHANCED: Give the AI strict HTML styling rules for badges ---
     badge_instruction = (
         "Include relevant standard Markdown badges (e.g., using shields.io for language, build status, license). "
-        "Integrate them stylistically at the very top of the document (e.g., grouped neatly and centered using HTML `<p align=\"center\">` tags directly under the main title) rather than randomly placing them."
+        "Integrate them stylistically at the very top of the document (e.g., grouped neatly and centered using HTML `<div align=\"center\">` tags directly under the main title) rather than randomly placing them."
     ) if include_badges else "Do NOT include any Markdown badges. Keep the visual style purely text-based."
 
     # --- ENHANCED: Change "Rebuild" to "Update" and add the Surgical Update rule ---

@@ -99,6 +99,7 @@ gh secret set GEMINI_API_KEY --body "your_actual_api_key_here"
 ```
 
 <p><b>Via Local Environment Variables (for local execution):</b></p>
+
 ```bash
 export GEMINI_API_KEY="your_actual_api_key_here"
 # export OPENAI_API_KEY="your_actual_api_key_here"
